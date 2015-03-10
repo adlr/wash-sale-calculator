@@ -6,7 +6,6 @@ import argparse
 import copy
 import lot
 import progress_logger
-import sys
 
 def remove_lot_from_list(lots, lot):
   lots[:] = [elt for elt in lots if id(elt) != id(lot)]
@@ -134,7 +133,7 @@ def perform_wash(lots, logger):
   removed.sort(cmp=cmp_by_sell_date)
   return removed
 
-def main(args):
+def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('-o', '--out_file')
   parser.add_argument('-w', '--do_wash', metavar='in_file')
@@ -156,4 +155,4 @@ def main(args):
       lot.save_lots(out, parsed.out_file)
 
 if __name__ == "__main__":
-  main(sys.argv)
+  main()
