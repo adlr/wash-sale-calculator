@@ -7,4 +7,4 @@ To use, you'll need a CSV file with the initial state. I've provided a dummy one
 
 To use the program from a terminal, run:
 
-python trade.py -w dummy_example.csv -o out.csv
+python wash.py -w dummy_example.csv -o out.csv

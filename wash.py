@@ -2,8 +2,11 @@
 
 # BSD License
 
+import argparse
 import copy
 import progress_logger
+import sys
+import trade
 
 def remove_lot_from_list(lots, lot):
   lots[:] = [elt for elt in lots if id(elt) != id(lot)]
@@ -130,3 +133,22 @@ def perform_wash(lots):
   removed.extend(lots)
   removed.sort(cmp=cmp_by_sell_date)
   return removed
+
+def main(args):
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-o', '--out_file')
+  parser.add_argument('-w', '--do_wash', metavar='in_file')
+  parsed = parser.parse_args()
+
+  if parsed.do_wash:
+    lots = trade.load_lots(parsed.do_wash)
+    trade.print_lots(lots)
+    out = perform_wash(lots)
+    print 'output:'
+    trade.print_lots(out)
+    if parsed.out_file:
+      print 'Saving final lots to', parsed.out_file
+      trade.save_lots(out, parsed.out_file)
+
+if __name__ == "__main__":
+  main(sys.argv)

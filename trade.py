@@ -5,8 +5,6 @@
 import argparse
 import csv
 import datetime
-import sys
-import wash
 
 class Lot(object):
   """Represents a buy with optional sell."""
@@ -124,22 +122,3 @@ def print_lots(lots):
       if lot.adjustment != 0:
         assert(lot.adjustment == lot.basis - lot.proceeds)
   print "Totals: Basis %.2f Proceeds %.2f Adj: %.2f (basis-adj: %.2f)" % (basis, proceeds, adjustment, basis - adjustment)
-
-def main(args):
-  parser = argparse.ArgumentParser()
-  parser.add_argument('-o', '--out_file')
-  parser.add_argument('-w', '--do_wash', metavar='in_file')
-  parsed = parser.parse_args()
-
-  if parsed.do_wash:
-    lots = load_lots(parsed.do_wash)
-    print_lots(lots)
-    out = wash.perform_wash(lots)
-    print 'output:'
-    print_lots(out)
-    if parsed.out_file:
-      print 'Saving final lots to', parsed.out_file
-      save_lots(out, parsed.out_file)
-
-if __name__ == "__main__":
-    main(sys.argv)
