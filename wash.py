@@ -4,9 +4,9 @@
 
 import argparse
 import copy
+import lot
 import progress_logger
 import sys
-import trade
 
 def remove_lot_from_list(lots, lot):
   lots[:] = [elt for elt in lots if id(elt) != id(lot)]
@@ -141,14 +141,14 @@ def main(args):
   parsed = parser.parse_args()
 
   if parsed.do_wash:
-    lots = trade.load_lots(parsed.do_wash)
-    trade.print_lots(lots)
+    lots = lot.load_lots(parsed.do_wash)
+    lot.print_lots(lots)
     out = perform_wash(lots)
     print 'output:'
-    trade.print_lots(out)
+    lot.print_lots(out)
     if parsed.out_file:
       print 'Saving final lots to', parsed.out_file
-      trade.save_lots(out, parsed.out_file)
+      lot.save_lots(out, parsed.out_file)
 
 if __name__ == "__main__":
   main(sys.argv)
