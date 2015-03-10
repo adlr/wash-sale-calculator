@@ -1,0 +1,6 @@
+Cnt,Sym,Desc,BuyDate,Basis,SellDate,Proceeds,AdjCode,Adj,FormPosition
+100,M,123ABC,9/26/2013,5000,2/6/2014,4000,,0,Line 1
+50,M,123ABC,2/11/2014,1000,,,,,Buy A
+50,M,123ABC,2/12/2014,1000,,,,,Buy B
+50,M,123ABC,2/13/2014,1000,,,,,Buy C
+50,M,123ABC,2/14/2014,1000,,,,,Buy D
