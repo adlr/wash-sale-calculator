@@ -3,6 +3,7 @@
 # BSD License
 
 import argparse
+import copy
 import csv
 import datetime
 
@@ -26,6 +27,7 @@ class Lot(object):
     self.adjustment = adjustment
     self.proceeds = proceeds
     self.form_position = form_position
+    self.original_lot = id(self)
   @staticmethod
   def create_from_csv_row(row):
     lot = Lot(int(row[0]), row[1], row[2],
@@ -61,8 +63,13 @@ class Lot(object):
             self.proceeds, self.code,
             self.adjustment, self.form_position]
   def __eq__(self, that):
-    return (isinstance(that, self.__class__)
-                       and self.__dict__ == that.__dict__)
+    if not isinstance(that, self.__class__):
+      return False
+    self_dict = copy.copy(self.__dict__)
+    self_dict.pop("original_lot")
+    that_dict = copy.copy(that.__dict__)
+    that_dict.pop("original_lot")
+    return self_dict == that_dict
   def __ne__(self, that):
     return not self.__eq__(that)
   def __str__(self):

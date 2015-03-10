@@ -42,11 +42,12 @@ def cmp_by_sell_date(lot_a, lot_b):
     return 1
   return 0
 
-def buy_lots_within_window(lots, date):
-  # Returns an array of lots that were bought within 30 days of the date,
+def buy_lots_within_window(lots, loss):
+  # Returns an array of lots that were bought within 30 days of the loss,
   # but were not sold on this date
-  return [lot for lot in lots if abs((lot.buydate - date).days) <= 30 and \
-          ((not lot.has_sell()) or lot.selldate != date)]
+  return [lot for lot in lots if abs((lot.buydate -
+                                      loss.selldate).days) <= 30 and \
+          (lot.original_lot != loss.original_lot)]
 
 def earliest_wash_loss(lots):
   lots.sort(cmp=cmp_by_sell_date)
@@ -56,7 +57,7 @@ def earliest_wash_loss(lots):
       return None  # We're done
     if lot.proceeds >= lot.basis:
       continue
-    buys = buy_lots_within_window(lots, lot.selldate)
+    buys = buy_lots_within_window(lots, lot)
     if not buys:
       continue
     ret.append(lot)
@@ -93,7 +94,7 @@ def perform_wash(lots, logger):
     if not loss_lots:
       break
     logger.print_progress(lots, "Found the following losses", loss_lots)
-    buy_lots = buy_lots_within_window(lots, loss_lots[0].selldate)
+    buy_lots = buy_lots_within_window(lots, loss_lots[0])
     logger.print_progress(lots, "Here are the replacements", buy_lots)
     if not buy_lots:
       print "Error: no buy lots"

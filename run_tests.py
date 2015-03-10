@@ -16,6 +16,10 @@ def run_test(input_csv, expected_out_csv):
   expected.sort(cmp=wash.cmp_by_buy_date)
   if out != expected:
     print "Test failed:", input_csv
+    print "Got result:"
+    lot.print_lots(out)
+    print "\nExpected:"
+    lot.print_lots(expected)
   else:
     print "Test passed:", input_csv
 
