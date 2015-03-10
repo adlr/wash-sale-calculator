@@ -87,15 +87,15 @@ def split_head_lot(lots, ideal_head_count):
   lots.insert(0, new_lot)
   return new_lot
 
-def perform_wash(lots):
+def perform_wash(lots, logger):
   removed = []
   while True:
     loss_lots = earliest_wash_loss(lots)
     if not loss_lots:
       break
-    progress_logger.print_progress(lots, "Found the following losses", loss_lots)
+    logger.print_progress(lots, "Found the following losses", loss_lots)
     buy_lots = buy_lots_within_window(lots, loss_lots[0].selldate)
-    progress_logger.print_progress(lots, "Here are the replacements", buy_lots)
+    logger.print_progress(lots, "Here are the replacements", buy_lots)
     if not buy_lots:
       print "Error: no buy lots"
       raise
@@ -105,29 +105,29 @@ def perform_wash(lots):
     while buy_lots and loss_lots:
       if buy_lots[0].count > loss_lots[0].count:
         # split buy
-        progress_logger.print_progress(lots, "Splitting buy", [buy_lots[0]])
+        logger.print_progress(lots, "Splitting buy", [buy_lots[0]])
         new_buy = split_head_lot(buy_lots, loss_lots[0].count)
         lots.append(new_buy)
-        progress_logger.print_progress(lots, "into these", [buy_lots[0],
+        logger.print_progress(lots, "into these", [buy_lots[0],
                                                             buy_lots[1]])
       elif buy_lots[0].count < loss_lots[0].count:
         # split loss
-        progress_logger.print_progress(lots, "Splitting loss", [loss_lots[0]])
+        logger.print_progress(lots, "Splitting loss", [loss_lots[0]])
         new_loss = split_head_lot(loss_lots, buy_lots[0].count)
         lots.append(new_loss)
-        progress_logger.print_progress(lots, "into these", [loss_lots[0],
+        logger.print_progress(lots, "into these", [loss_lots[0],
                                                             loss_lots[1]])
       assert buy_lots[0].count == loss_lots[0].count
       buy = buy_lots[0]
       loss = loss_lots[0]
-      progress_logger.print_progress(lots, "pairing these", [buy, loss])
+      logger.print_progress(lots, "pairing these", [buy, loss])
       remove_lot_from_list(buy_lots, buy)
       remove_lot_from_list(loss_lots, loss)
       remove_lot_from_list(lots, loss)
       removed.append(loss)
       buy.basis = buy.basis + loss.basis - loss.proceeds
       buy.buydate = buy.buydate - (loss.selldate - loss.buydate)
-      progress_logger.print_progress(lots, "pair complete", [buy])
+      logger.print_progress(lots, "pair complete", [buy])
       loss.code = 'W'
       loss.adjustment = loss.basis - loss.proceeds
   removed.extend(lots)
@@ -138,12 +138,17 @@ def main(args):
   parser = argparse.ArgumentParser()
   parser.add_argument('-o', '--out_file')
   parser.add_argument('-w', '--do_wash', metavar='in_file')
+  parser.add_argument('-q', '--quiet', action="store_true")
   parsed = parser.parse_args()
 
   if parsed.do_wash:
     lots = lot.load_lots(parsed.do_wash)
     lot.print_lots(lots)
-    out = perform_wash(lots)
+    if parsed.quiet:
+      logger = progress_logger.NullLogger()
+    else:
+      logger = progress_logger.TermLogger()
+    out = perform_wash(lots, logger)
     print 'output:'
     lot.print_lots(out)
     if parsed.out_file:
