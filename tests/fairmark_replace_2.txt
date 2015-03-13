@@ -1,0 +1,21 @@
+From http://fairmark.com/capgain/wash/wsreplac.htm
+
+Accessed on 3/13/2015
+
+Quote:
+
+2: Selling Half
+On June 1 you buy 200 shares of XYZ for $10,000. On June 12 you sell
+100 shares for $4,000 (a loss of $1,000). You continue to hold the
+other 100 shares.
+
+The answer here is a little less obvious. After the sale, you hold
+shares identical to the shares you sold, and you bought those shares
+less than 31 days before the sale. But you probably still feel that
+the wash sale rule shouldn't apply here. And the IRS agrees, in the
+situation where you bought the 200 shares in a single
+lot. Furthermore, although the IRS doesn't say this, the result
+shouldn't change if you gave a single buy order for 200 and your
+broker happened to execute it by buying two lots of 100 shares
+each. It's clear the shares you have left after the sale weren't
+bought to replace the shares you sold.

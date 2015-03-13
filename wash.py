@@ -42,12 +42,23 @@ def cmp_by_sell_date(lot_a, lot_b):
     return 1
   return 0
 
+def buy_lots_match(lot_a, lot_b):
+  a_buys = lot_a.buy_lot.split(',')
+  b_buys = lot_b.buy_lot.split(',')
+  return bool(set(a_buys).intersection(b_buys))
+
+def merge_buy_lots(merge_from, merge_to):
+  # Move all buy lots from 'from' into 'to'. Assume there is no intersection
+  assert(not buy_lots_match(merge_from, merge_to))
+  merge_to.buy_lot += ',' + merge_from.buy_lot
+
 def buy_lots_within_window(lots, loss):
   # Returns an array of lots that were bought within 30 days of the loss,
   # but were not sold on this date
-  return [lot for lot in lots if abs((lot.buydate -
-                                      loss.selldate).days) <= 30 and \
-          (lot.original_lot != loss.original_lot)]
+  return [lot for lot in lots if \
+          (abs((lot.buydate - loss.selldate).days) <= 30 and 
+           not buy_lots_match(lot, loss) and 
+           not lot.is_replacement)]
 
 def earliest_wash_loss(lots):
   lots.sort(cmp=cmp_by_sell_date)
@@ -127,6 +138,8 @@ def perform_wash(lots, logger):
       removed.append(loss)
       buy.basis = buy.basis + loss.basis - loss.proceeds
       buy.buydate = buy.buydate - (loss.selldate - loss.buydate)
+      buy.is_replacement = True
+      merge_buy_lots(loss, buy)
       logger.print_progress(lots, "pair complete", [buy])
       loss.code = 'W'
       loss.adjustment = loss.basis - loss.proceeds

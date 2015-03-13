@@ -1,0 +1,18 @@
+From http://www.irs.gov/pub/irs-pdf/p550.pdf
+
+Accessed on 3/13/2015
+
+"Example. During 2008, you bought 100
+shares of X stock on each of three occasions.
+You paid $158 a share for the first block of 100
+shares, $100 a share for the second block, and
+$95 a share for the third block. On December
+27, 2013, you sold 300 shares of X stock for
+$125 a share. On January 9, 2014, you bought
+250 shares of identical X stock. You cannot deduct
+the loss of $33 a share on the first block
+because within 30 days after the date of sale
+you bought 250 identical shares of X stock. In
+addition, you cannot reduce the gain realized
+on the sale of the second and third blocks of
+stock by this loss."

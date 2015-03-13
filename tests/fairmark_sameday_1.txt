@@ -1,0 +1,25 @@
+From http://fairmark.com/capgain/wash/wssameday.htm
+
+Accessed on 3/13/2015
+
+Quote:
+
+Here's What They Say
+IRS Publication 550 contains the following statement:
+
+Loss from a wash sale of one block of stock or securities cannot be
+used to reduce any gains on identical blocks sold the same day.
+
+It Doesn't Apply Here
+Here's an example of a common situation where this statement does not
+apply:
+
+A day trader buys 100 XYZ and sells it the same day at a loss. Later
+that day, he again buys 100 XYZ and sells it at a gain.
+
+It's clear that the wash sale rule applies to the first sale, because
+it's a loss with replacement stock bought within 30 days. The
+disallowed loss is added to the basis of the second block of stock and
+reduces the gain (or turns the gain into a loss). The IRS will not
+prevent you from offsetting the gain with the loss in this situation,
+even though both sales took place on the same day.

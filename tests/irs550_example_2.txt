@@ -1,0 +1,24 @@
+From http://www.irs.gov/pub/irs-pdf/p550.pdf
+
+Accessed on 3/13/2015
+
+"Example 1. You bought 100 shares of M
+stock on September 26, 2013, for $5,000. On
+December 19, 2013, you bought 50 shares of
+substantially identical stock for $2,750. On December
+27, 2013, you bought 25 shares of substantially
+identical stock for $1,125. On January
+9, 2014, you sold for $4,000 the 100 shares you
+bought in September. You have a $1,000 loss
+on the sale. However, because you bought 75
+shares of substantially identical stock within 30
+days before the sale, you cannot deduct the
+loss ($750) on 75 shares. You can deduct the
+loss ($250) on the other 25 shares. The basis of
+the 50 shares bought on December 19, 2013, is
+increased by two-thirds (50 ÷ 75) of the $750
+disallowed loss. The new basis of those shares
+is $3,250 ($2,750 + $500). The basis of the 25
+shares bought on December 27, 2013, is increased
+by the rest of the loss to $1,375
+($1,125 + $250)."

@@ -3,7 +3,6 @@
 # BSD License
 
 import argparse
-import copy
 import csv
 import datetime
 
@@ -15,7 +14,9 @@ class Lot(object):
                code = None,
                adjustment = None,
                proceeds = None,
-               form_position = ''):
+               form_position = '',
+               buy_lot = '',
+               is_replacement = False):
     self.count = count
     self.symbol = symbol
     self.description = description
@@ -27,12 +28,15 @@ class Lot(object):
     self.adjustment = adjustment
     self.proceeds = proceeds
     self.form_position = form_position
-    self.original_lot = id(self)
+    self.buy_lot = buy_lot
+    self.is_replacement = is_replacement
   @staticmethod
-  def create_from_csv_row(row):
+  def create_from_csv_row(row, buy_lot):
+    if len(row) > 10 and row[10]:
+      buy_lot = row[10]
     lot = Lot(int(row[0]), row[1], row[2],
               datetime.datetime.strptime(row[3].strip(), "%m/%d/%Y").date(),
-              float(row[4]))
+              float(row[4]), buy_lot=buy_lot)
     if row[5]:
       lot.selldate = \
         datetime.datetime.strptime(row[5].strip(), "%m/%d/%Y").date()
@@ -40,6 +44,10 @@ class Lot(object):
       lot.code = row[7]
       lot.adjustment = float(row[8])
     lot.form_position = row[9]
+    is_replacement = False
+    if len(row) > 11:
+      is_replacement = not (row[11].lower() != 'true')
+    lot.is_replacement = is_replacement
     return lot
   def acquition_match(self, that):
     return (self.count == that.count and
@@ -53,7 +61,7 @@ class Lot(object):
   def csv_headers():
     return ['Cnt', 'Sym', 'Desc', 'BuyDate',
             'Basis', 'SellDate', 'Proceeds', 'AdjCode',
-            'Adj', 'FormPosition']
+            'Adj', 'FormPosition', 'BuyLot', 'IsReplacement']
   def csv_row(self):
     return [self.count, self.symbol, self.description,
             self.buydate.strftime('%m/%d/%Y'),
@@ -61,15 +69,12 @@ class Lot(object):
             None if self.selldate is None else \
             self.selldate.strftime('%m/%d/%Y'),
             self.proceeds, self.code,
-            self.adjustment, self.form_position]
+            self.adjustment, self.form_position,
+            self.buy_lot, 'True' if self.is_replacement else '']
   def __eq__(self, that):
     if not isinstance(that, self.__class__):
       return False
-    self_dict = copy.copy(self.__dict__)
-    self_dict.pop("original_lot")
-    that_dict = copy.copy(that.__dict__)
-    that_dict.pop("original_lot")
-    return self_dict == that_dict
+    return self.__dict__ == that.__dict__
   def __ne__(self, that):
     return not self.__eq__(that)
   def __str__(self):
@@ -89,7 +94,10 @@ class Lot(object):
     position = ''
     if self.form_position:
       position = " " + self.form_position
-    return front + sell + code + position
+    replacement = ''
+    if self.is_replacement:
+      replacement = ' [IsRepl]'
+    return front + sell + code + position + ' ' + self.buy_lot + replacement
   __repr__ = __str__
 
 def save_lots(lots, filepath):
@@ -103,10 +111,13 @@ def save_lots(lots, filepath):
 def load_lots(filepath):
   reader = csv.reader(open(filepath))
   ret = []
+  buy_num = 1
   for row in reader:
     if row[0] and row[0] == Lot.csv_headers()[0]:
       continue
-    ret.append(Lot.create_from_csv_row(row))
+    ret.append(Lot.create_from_csv_row(row, str(buy_num)))
+    if ret[-1].buy_lot == str(buy_num):
+      buy_num = buy_num + 1
   return ret
 
 def print_lots(lots):

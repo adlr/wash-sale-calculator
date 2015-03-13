@@ -1,0 +1,15 @@
+From http://www.irs.gov/pub/irs-pdf/p550.pdf
+
+Accessed on 3/13/2015
+
+"Example 2. You bought 100 shares of M
+stock on September 26, 2013. On February 6,
+2014, you sold those shares at a $1,000 loss.
+On each of the 4 days from February 11, 2014,
+to February 14, 2014, you bought 50 shares of
+substantially identical stock. You cannot deduct
+your $1,000 loss. You must add half the disallowed
+loss ($500) to the basis of the 50 shares
+bought on February 11. Add the other half
+($500) to the basis of the shares bought on
+February 12."

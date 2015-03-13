@@ -1,0 +1,13 @@
+From http://www.irs.gov/pub/irs-pdf/p550.pdf
+
+Accessed on 3/13/2015
+
+"Example 1. You buy 100 shares of X stock
+for $1,000. You sell these shares for $750 and
+within 30 days from the sale you buy 100
+shares of the same stock for $800. Because
+you bought substantially identical stock, you
+cannot deduct your loss of $250 on the sale.
+However, you add the disallowed loss of $250
+to the cost of the new stock, $800, to obtain
+your basis in the new stock, which is $1,050."
