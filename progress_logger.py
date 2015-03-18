@@ -19,20 +19,20 @@ class color:
   END = '\033[0m'
 
 class TermLogger(object):
-  def print_progress(self, lots, text, bold_lots):
+  def print_progress(self, lots, text, red_lots):
     lots = copy.copy(lots)  # so I can re-sort non-destructively
     print text
     lots.sort(cmp=wash.cmp_by_buy_date)
-    bold_ids = [id(lot) for lot in bold_lots]
+    red_ids = [id(lot) for lot in red_lots]
     for lot in lots:
       header = ''
       footer = ''
-      if id(lot) in bold_ids:
-        header = color.BOLD
+      if id(lot) in red_ids:
+        header = color.RED
         footer = color.END
       print header + str(lot) + footer
     raw_input('hit enter>')
 
 class NullLogger(object):
-  def print_progress(self, lots, text, bold_lots):
+  def print_progress(self, lots, text, red_lots):
     pass
