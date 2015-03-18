@@ -30,19 +30,27 @@ class Lot(object):
     self.form_position = form_position
     self.buy_lot = buy_lot
     self.is_replacement = is_replacement
+
+  @staticmethod
+  def str_to_float(f):
+    if f.startswith('$'): f = f[1:]
+    f = f.replace(',', '')
+    if f == '': f = '0'
+    return float(f)
+
   @staticmethod
   def create_from_csv_row(row, buy_lot):
     if len(row) > 10 and row[10]:
       buy_lot = row[10]
     lot = Lot(int(row[0]), row[1], row[2],
               datetime.datetime.strptime(row[3].strip(), "%m/%d/%Y").date(),
-              float(row[4]), buy_lot=buy_lot)
+              Lot.str_to_float(row[4]), buy_lot=buy_lot)
     if row[5]:
       lot.selldate = \
         datetime.datetime.strptime(row[5].strip(), "%m/%d/%Y").date()
-      lot.proceeds = float(row[6])
+      lot.proceeds = Lot.str_to_float(row[6])
       lot.code = row[7]
-      lot.adjustment = float(row[8])
+      lot.adjustment = Lot.str_to_float(row[8])
     lot.form_position = row[9]
     is_replacement = False
     if len(row) > 11:
