@@ -1,0 +1,4 @@
+This is the corresponding test for
+https://github.com/adlr/wash-sale-calculator/issues/6
+
+It was causing an assertion failure.

@@ -1,0 +1,4 @@
+Cnt,Sym,Desc,BuyDate,Basis,SellDate,Proceeds,AdjCode,Adj,FormPosition,BuyLot,IsReplacement
+2,GOOG,GOOG,01/25/2014,100.0,01/28/2014,50.0,W,50.0,,1,
+2,GOOG,GOOG,02/22/2014,150.0,02/28/2014,50.0,,0.0,.1,"2,1",True
+3,GOOG,GOOG,02/25/2014,150.0,02/28/2014,75.0,,0.0,.2,2,

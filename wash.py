@@ -73,8 +73,10 @@ def earliest_wash_loss(lots):
       continue
     ret.append(lot)
     # Pull all the next lots w/ the same sell-date into ret if they have losses
+    i = i + 1
     while i < len(lots):
-      if lots[i].has_sell() and lots[i].proceeds < lots[i].basis:
+      if (lots[i].has_sell() and lots[i].proceeds < lots[i].basis and
+          lots[i].selldate == ret[0].selldate):
         ret.append(lots[i])
         i = i + 1
         continue
