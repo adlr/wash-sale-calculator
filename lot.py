@@ -146,5 +146,5 @@ def print_lots(lots):
     if lot.adjustment:
       adjustment += lot.adjustment
       if lot.adjustment != 0:
-        assert(lot.adjustment == lot.basis - lot.proceeds)
+        assert(abs(lot.adjustment - (lot.basis - lot.proceeds)) < .0000001)
   print "Totals: Basis %.2f Proceeds %.2f Adj: %.2f (basis-adj: %.2f)" % (basis, proceeds, adjustment, basis - adjustment)
