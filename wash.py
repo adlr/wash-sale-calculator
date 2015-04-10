@@ -53,12 +53,21 @@ def merge_buy_lots(merge_from, merge_to):
   merge_to.buy_lot += ',' + merge_from.buy_lot
 
 def buy_lots_within_window(lots, loss):
-  # Returns an array of lots that were bought within 30 days of the loss,
-  # but were not sold on this date
-  return [lot for lot in lots if \
-          (abs((lot.buydate - loss.selldate).days) <= 30 and 
-           not buy_lots_match(lot, loss) and 
-           not lot.is_replacement)]
+  # Returns an array of lots that were bought within 30 days of the loss
+  def match(lot, loss):
+    if abs((lot.buydate - loss.selldate).days) > 30:
+      return False
+    if buy_lots_match(lot, loss):
+      return False
+    if lot.is_replacement:
+      return False
+    if not lot.selldate or lot.selldate > loss.selldate:
+      return True
+    if lot.selldate < loss.selldate:
+      return False
+    if lot.buydate == lot.selldate:
+      return True
+  return [lot for lot in lots if match(lot, loss)]
 
 def earliest_wash_loss(lots):
   lots.sort(cmp=cmp_by_sell_date)

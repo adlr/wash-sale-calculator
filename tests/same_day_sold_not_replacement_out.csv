@@ -1,0 +1,3 @@
+Cnt,Sym,Desc,BuyDate,Basis,SellDate,Proceeds,AdjCode,Adj,FormPosition,BuyLot,IsReplacement
+4,GOOG,RS 15481,09/25/2014,2351.96,10/24/2014,2148.64,,0.0,lot1,1,
+2,GOOG,RS 15481,09/25/2014,1175.98,10/24/2014,1074.32,,0.0,lot2,2,

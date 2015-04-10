@@ -1,0 +1,4 @@
+This is the corresponding test for
+https://github.com/adlr/wash-sale-calculator/issues/7
+
+It was using shares sold on the same day as replacements.
