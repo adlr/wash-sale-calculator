@@ -65,8 +65,7 @@ def buy_lots_within_window(lots, loss):
       return True
     if lot.selldate < loss.selldate:
       return False
-    if lot.buydate == lot.selldate:
-      return True
+    return True
   return [lot for lot in lots if match(lot, loss)]
 
 def earliest_wash_loss(lots):
