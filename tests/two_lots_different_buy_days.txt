@@ -1,0 +1,5 @@
+This is a test for
+https://github.com/adlr/wash-sale-calculator/issues/7
+
+Two overlapping lots, which are sold on the same day but bought on different
+days, should wash against each other.
