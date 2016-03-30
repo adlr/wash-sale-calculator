@@ -120,7 +120,6 @@ def perform_wash(lots, logger):
       lots.append(new_buy)
       logger.print_progress(lots, "into these (%s)" % loss_lot.count,
                             [buy_lots[0], buy_lots[1]])
-      continue
     elif buy_lots[0].count < loss_lot.count:
       # split loss
       logger.print_progress(lots, "Splitting loss", [loss_lot])
@@ -128,7 +127,7 @@ def perform_wash(lots, logger):
       lots.append(new_loss)
       logger.print_progress(lots, "into these (%s)" % buy_lots[0].count,
                             [loss_lot, new_loss])
-      continue
+      loss_lot = new_loss
     assert buy_lots[0].count == loss_lot.count
     buy = buy_lots[0]
     loss = loss_lot
