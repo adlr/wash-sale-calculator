@@ -70,8 +70,7 @@ def buy_lots_within_window(lots, loss):
 
 def earliest_wash_loss(lots):
   lots.sort(cmp=cmp_by_sell_date)
-  ret = []
-  for i, lot in enumerate(lots):
+  for lot in lots:
     if not lot.has_sell():
       return None  # We're done
     if lot.proceeds >= lot.basis:
@@ -79,17 +78,8 @@ def earliest_wash_loss(lots):
     buys = buy_lots_within_window(lots, lot)
     if not buys:
       continue
-    ret.append(lot)
-    # Pull all the next lots w/ the same sell-date into ret if they have losses
-    i = i + 1
-    while i < len(lots):
-      if (lots[i].has_sell() and lots[i].proceeds < lots[i].basis and
-          lots[i].selldate == ret[0].selldate):
-        ret.append(lots[i])
-        i = i + 1
-        continue
-      break
-    return ret
+    return lot
+  return None
 
 def split_head_lot(lots, ideal_head_count):
   # returns the new lot that was created
@@ -111,48 +101,48 @@ def split_head_lot(lots, ideal_head_count):
 def perform_wash(lots, logger):
   removed = []
   while True:
-    loss_lots = earliest_wash_loss(lots)
-    if not loss_lots:
+    loss_lot = earliest_wash_loss(lots)
+    if not loss_lot:
       break
-    logger.print_progress(lots, "Found the following losses", loss_lots)
-    buy_lots = buy_lots_within_window(lots, loss_lots[0])
+    logger.print_progress(lots, "Found the following losses", [loss_lot])
+    buy_lots = buy_lots_within_window(lots, loss_lot)
     logger.print_progress(lots, "Here are the replacements", buy_lots)
     if not buy_lots:
       print "Error: no buy lots"
       raise
     # Pair them off, splitting as necessary
     buy_lots.sort(cmp=cmp_by_buy_date)
-    loss_lots.sort(cmp=cmp_by_buy_date)
-    while buy_lots and loss_lots:
-      if buy_lots[0].count > loss_lots[0].count:
-        # split buy
-        logger.print_progress(lots, "Splitting buy", [buy_lots[0]])
-        new_buy = split_head_lot(buy_lots, loss_lots[0].count)
-        lots.append(new_buy)
-        logger.print_progress(lots, "into these", [buy_lots[0],
-                                                            buy_lots[1]])
-      elif buy_lots[0].count < loss_lots[0].count:
-        # split loss
-        logger.print_progress(lots, "Splitting loss", [loss_lots[0]])
-        new_loss = split_head_lot(loss_lots, buy_lots[0].count)
-        lots.append(new_loss)
-        logger.print_progress(lots, "into these", [loss_lots[0],
-                                                            loss_lots[1]])
-      assert buy_lots[0].count == loss_lots[0].count
-      buy = buy_lots[0]
-      loss = loss_lots[0]
-      logger.print_progress(lots, "pairing these", [buy, loss])
-      remove_lot_from_list(buy_lots, buy)
-      remove_lot_from_list(loss_lots, loss)
-      remove_lot_from_list(lots, loss)
-      removed.append(loss)
-      buy.basis = buy.basis + loss.basis - loss.proceeds
-      buy.buydate = buy.buydate - (loss.selldate - loss.buydate)
-      buy.is_replacement = True
-      merge_buy_lots(loss, buy)
-      logger.print_progress(lots, "pair complete", [buy])
-      loss.code = 'W'
-      loss.adjustment = loss.basis - loss.proceeds
+
+    if buy_lots[0].count > loss_lot.count:
+      # split buy
+      logger.print_progress(lots, "Splitting buy", [buy_lots[0]])
+      new_buy = split_head_lot(buy_lots, loss_lot.count)
+      lots.append(new_buy)
+      logger.print_progress(lots, "into these (%s)" % loss_lot.count,
+                            [buy_lots[0], buy_lots[1]])
+      continue
+    elif buy_lots[0].count < loss_lot.count:
+      # split loss
+      logger.print_progress(lots, "Splitting loss", [loss_lot])
+      new_loss = split_head_lot([loss_lot], buy_lots[0].count)
+      lots.append(new_loss)
+      logger.print_progress(lots, "into these (%s)" % buy_lots[0].count,
+                            [loss_lot, new_loss])
+      continue
+    assert buy_lots[0].count == loss_lot.count
+    buy = buy_lots[0]
+    loss = loss_lot
+    logger.print_progress(lots, "pairing these", [buy, loss])
+    remove_lot_from_list(lots, loss)
+    removed.append(loss)
+    buy.basis = buy.basis + loss.basis - loss.proceeds
+    buy.buydate = buy.buydate - (loss.selldate - loss.buydate)
+    buy.is_replacement = True
+    merge_buy_lots(loss, buy)
+    logger.print_progress(lots, "pair complete", [buy])
+    loss.code = 'W'
+    loss.adjustment = loss.basis - loss.proceeds
+
   removed.extend(lots)
   removed.sort(cmp=cmp_by_sell_date)
   return removed
