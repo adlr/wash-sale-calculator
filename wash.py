@@ -47,11 +47,6 @@ def buy_lots_match(lot_a, lot_b):
   b_buys = lot_b.buy_lot.split(',')
   return bool(set(a_buys).intersection(b_buys))
 
-def merge_buy_lots(merge_from, merge_to):
-  # Move all buy lots from 'from' into 'to'. Assume there is no intersection
-  assert(not buy_lots_match(merge_from, merge_to))
-  merge_to.buy_lot += ',' + merge_from.buy_lot
-
 def buy_lots_within_window(lots, loss):
   # Returns an array of lots that were bought within 30 days of the loss
   def match(lot, loss):
@@ -128,17 +123,18 @@ def perform_wash(lots, logger):
       logger.print_progress(lots, "into these (%s)" % buy_lots[0].count,
                             [loss_lot, new_loss])
       loss_lot = new_loss
+
     assert buy_lots[0].count == loss_lot.count
     buy = buy_lots[0]
     loss = loss_lot
     logger.print_progress(lots, "pairing these", [buy, loss])
+
+    assert(not buy_lots_match(buy, loss))
+    buy.absorb_loss(loss)
+    logger.print_progress(lots, "pair complete", [buy])
+
     remove_lot_from_list(lots, loss)
     removed.append(loss)
-    buy.basis = buy.basis + loss.basis - loss.proceeds
-    buy.buydate = buy.buydate - (loss.selldate - loss.buydate)
-    buy.is_replacement = True
-    merge_buy_lots(loss, buy)
-    logger.print_progress(lots, "pair complete", [buy])
     loss.code = 'W'
     loss.adjustment = loss.basis - loss.proceeds
 

@@ -63,6 +63,12 @@ class Lot(object):
             self.description == that.description and
             self.buydate == that.buydate and
             self.basis == that.basis)
+  # Adjusts cost basis and buy date by loss and holding period of 'loss'.
+  def absorb_loss(self, loss):
+    self.basis = self.basis + loss.basis - loss.proceeds
+    self.buydate = self.buydate - (loss.selldate - loss.buydate)
+    self.is_replacement = True
+    self.buy_lot += ',' + loss.buy_lot
   def has_sell(self):
     return self.selldate is not None
   @staticmethod
