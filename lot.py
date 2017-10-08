@@ -71,13 +71,16 @@ class Lot(object):
             'Basis', 'SellDate', 'Proceeds', 'AdjCode',
             'Adj', 'FormPosition', 'BuyLot', 'IsReplacement']
   def csv_row(self):
+    decimal_fmt = '%.02f'
     return [self.count, self.symbol, self.description,
             self.buydate.strftime('%m/%d/%Y'),
-            self.basis,
+            decimal_fmt % self.basis,
             None if self.selldate is None else \
             self.selldate.strftime('%m/%d/%Y'),
-            self.proceeds, self.code,
-            self.adjustment, self.form_position,
+            None if self.proceeds is None else decimal_fmt % self.proceeds,
+            self.code,
+            None if self.adjustment is None else decimal_fmt % self.adjustment,
+            self.form_position,
             self.buy_lot, 'True' if self.is_replacement else '']
   def __eq__(self, that):
     if not isinstance(that, self.__class__):
