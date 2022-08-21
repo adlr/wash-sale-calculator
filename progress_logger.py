@@ -21,7 +21,7 @@ class color:
 class TermLogger(object):
   def print_progress(self, lots, text, red_lots):
     lots = copy.copy(lots)  # so I can re-sort non-destructively
-    print text
+    print(text)
     lots.sort(cmp=wash.cmp_by_buy_date)
     red_ids = [id(lot) for lot in red_lots]
     for lot in lots:
@@ -30,8 +30,8 @@ class TermLogger(object):
       if id(lot) in red_ids:
         header = color.RED
         footer = color.END
-      print header + str(lot) + footer
-    raw_input('hit enter>')
+      print(header + str(lot) + footer)
+    input('hit enter>')
 
 class NullLogger(object):
   def print_progress(self, lots, text, red_lots):

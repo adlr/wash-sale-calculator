@@ -7,21 +7,22 @@ import lot
 import os
 import progress_logger
 import wash
+import functools
 
 def run_test(input_csv, expected_out_csv):
   lots = lot.load_lots(input_csv)
   out = wash.perform_wash(lots, progress_logger.NullLogger())
   expected = lot.load_lots(expected_out_csv)
-  out.sort(cmp=wash.cmp_by_buy_date)
-  expected.sort(cmp=wash.cmp_by_buy_date)
+  out.sort(key = functools.cmp_to_key(wash.cmp_by_buy_date))
+  expected.sort(key = functools.cmp_to_key(wash.cmp_by_buy_date))
   if out != expected:
-    print "Test failed:", input_csv
-    print "Got result:"
+    print("Test failed:", input_csv)
+    print("Got result:")
     lot.print_lots(out)
-    print "\nExpected:"
+    print("\nExpected:")
     lot.print_lots(expected)
   else:
-    print "Test passed:", input_csv
+    print("Test passed:", input_csv)
 
 def main():
   test_dir = os.path.join(

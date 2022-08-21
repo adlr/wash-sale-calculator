@@ -32,7 +32,7 @@ def parse_schwab_1099b(fileobj):
       ret.append(lot.Lot(count, symbol, description, buydate, basis,
                         selldate, code, adjustment, proceeds,
                         'Line %d' % int(i / 3 + 1)))
-      print ret[-1]
+      print(ret[-1])
     i = i + 1
   return ret
 
@@ -74,10 +74,10 @@ def remove_sold_buys(lots):
         ret.append(sells.pop(idx))
         break
     if not found:
-      print "No match for", buy
+      print("No match for", buy)
       ret.append(buy)
   for sell in sells:
-    print "No match for", sell
+    print("No match for", sell)
   ret.extend(sells)
   return ret
 
@@ -103,45 +103,45 @@ def match_lots_to_1099(lots, t1099):
   def match_lots(raw, from1099):
     # match will be the same len as from1099, and will indicate for each
     # corresponding lot in from1099, which element in raw it corresponds to.
-    print 'match_lots:', len(raw), len(from1099)
+    print('match_lots:', len(raw), len(from1099))
     match = [-1] * len(from1099)
-    for fromidx in xrange(len(from1099) - 1, -1, -1):
+    for fromidx in range(len(from1099) - 1, -1, -1):
       fromlot = from1099[fromidx]
       found = False
-      print 'looking for match for', fromlot
-      for rawidx in xrange(len(raw)):
+      print('looking for match for', fromlot)
+      for rawidx in range(len(raw)):
         rawlot = raw[rawidx]
-        print '  try:', rawlot
+        print('  try:', rawlot)
         if rawidx in match:
-          print '  already matched.'
+          print('  already matched.')
           continue
         if (rawlot.count == fromlot.count and
             rawlot.buydate == fromlot.buydate):
           found = True
-          print 'match found'
+          print('match found')
           match[fromidx] = rawidx
           break
       if not found:
-        print "can't find match", fromlot
+        print("can't find match", fromlot)
     if -1 not in match:
       return match
-    print "Need assistance matching."
-    for rawidx in xrange(len(raw)):
+    print("Need assistance matching.")
+    for rawidx in range(len(raw)):
       if rawidx in match:
         continue
-      print '%d: %s' % (rawidx, raw[rawidx])
-    print "Pick indexes above for each of these lots from 1099b:"
-    for i in xrange(len(match)):
+      print('%d: %s' % (rawidx, raw[rawidx]))
+    print("Pick indexes above for each of these lots from 1099b:")
+    for i in range(len(match)):
       if match[i] != -1:
         continue
-      print from1099[i]
-    print "Now, you can give your input:"
-    for i in xrange(len(match)):
+      print(from1099[i])
+    print("Now, you can give your input:")
+    for i in range(len(match)):
       if match[i] != -1:
         continue
-      print from1099[i]
-      print "For this lot, which index is corresponding?"
-      match[i] = int(raw_input("idx:"))
+      print(from1099[i])
+      print("For this lot, which index is corresponding?")
+      match[i] = int(input("idx:"))
     return match
 
   def set_basis(good, bad):
@@ -156,11 +156,11 @@ def match_lots_to_1099(lots, t1099):
   lots = [lot for lot in lots if lot.has_sell()]
   while lots:
     date = lots[0].selldate
-    print 'selldate', date
+    print('selldate', date)
     (lotsraw, lots) = pop_lots_with_selldate(lots, date)
     (lots1099, t1099) = pop_lots_with_selldate(t1099, date)
     matches = match_lots(lotsraw, lots1099)
-    for i in xrange(len(matches)):
+    for i in range(len(matches)):
       set_basis(lotsraw[matches[i]], lots1099[i])
     ret.extend(lots1099)
   return ret
@@ -183,9 +183,9 @@ def main():
   parsed = parser.parse_args()
 
   lots = []
-  print parsed.statements
+  print(parsed.statements)
   for csvfile in parsed.statements:
-    print 'parsing statement', csvfile
+    print('parsing statement', csvfile)
     lots.extend(parse_schwab_statement(open(csvfile)))
   lot.print_lots(lots)
   lots = remove_sold_buys(lots)
@@ -194,9 +194,9 @@ def main():
   lot.print_lots(from1099)
 
   from1099 = match_lots_to_1099(lots, from1099)
-  print "1099b final:"
+  print("1099b final:")
   for outlot in from1099:
-    print outlot
+    print(outlot)
   lot.save_lots(from1099, parsed.out_file)
 
 if __name__ == "__main__":
