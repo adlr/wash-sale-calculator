@@ -4,6 +4,7 @@
 
 import copy
 import wash
+import functools
 
 # from http://stackoverflow.com/questions/8924173/how-do-i-print-bold-text-in-python
 class color:
@@ -22,7 +23,7 @@ class TermLogger(object):
   def print_progress(self, lots, text, red_lots):
     lots = copy.copy(lots)  # so I can re-sort non-destructively
     print(text)
-    lots.sort(cmp=wash.cmp_by_buy_date)
+    lots.sort(key = functools.cmp_to_key(wash.cmp_by_buy_date))
     red_ids = [id(lot) for lot in red_lots]
     for lot in lots:
       header = ''
