@@ -129,7 +129,7 @@ def load_lots(filepath):
   return ret
 
 def print_lots(lots):
-  print "Printing %d lots:" % len(lots)
+  print("Printing %d lots:" % len(lots))
   basis = 0
   proceeds = 0
   days = 0
@@ -139,7 +139,7 @@ def print_lots(lots):
   assert len(id_list) == len(set(id_list))
   # go through all lots
   for lot in lots:
-    print lot
+    print(lot)
     basis += lot.basis
     if lot.proceeds:
       proceeds += lot.proceeds
@@ -147,4 +147,4 @@ def print_lots(lots):
       adjustment += lot.adjustment
       if lot.adjustment != 0:
         assert(abs(lot.adjustment - (lot.basis - lot.proceeds)) < .0000001)
-  print "Totals: Basis %.2f Proceeds %.2f Adj: %.2f (basis-adj: %.2f)" % (basis, proceeds, adjustment, basis - adjustment)
+  print("Totals: Basis %.2f Proceeds %.2f Adj: %.2f (basis-adj: %.2f)" % (basis, proceeds, adjustment, basis - adjustment))

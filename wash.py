@@ -6,6 +6,7 @@ import argparse
 import copy
 import lot
 import progress_logger
+import functools
 
 def remove_lot_from_list(lots, lot):
   lots[:] = [elt for elt in lots if id(elt) != id(lot)]
@@ -69,7 +70,7 @@ def buy_lots_within_window(lots, loss):
   return [lot for lot in lots if match(lot, loss)]
 
 def earliest_wash_loss(lots):
-  lots.sort(cmp=cmp_by_sell_date)
+  lots.sort(key = functools.cmp_to_key(cmp_by_sell_date))
   ret = []
   for i, lot in enumerate(lots):
     if not lot.has_sell():
@@ -118,11 +119,11 @@ def perform_wash(lots, logger):
     buy_lots = buy_lots_within_window(lots, loss_lots[0])
     logger.print_progress(lots, "Here are the replacements", buy_lots)
     if not buy_lots:
-      print "Error: no buy lots"
+      print("Error: no buy lots")
       raise
     # Pair them off, splitting as necessary
-    buy_lots.sort(cmp=cmp_by_buy_date)
-    loss_lots.sort(cmp=cmp_by_buy_date)
+    buy_lots.sort(key = functools.cmp_to_key(cmp_by_buy_date))
+    loss_lots.sort(key = functools.cmp_to_key(cmp_by_buy_date))
     while buy_lots and loss_lots:
       if buy_lots[0].count > loss_lots[0].count:
         # split buy
@@ -154,7 +155,7 @@ def perform_wash(lots, logger):
       loss.code = 'W'
       loss.adjustment = loss.basis - loss.proceeds
   removed.extend(lots)
-  removed.sort(cmp=cmp_by_sell_date)
+  removed.sort(key = functools.cmp_to_key(cmp_by_sell_date))
   return removed
 
 def main():
@@ -172,10 +173,10 @@ def main():
     else:
       logger = progress_logger.TermLogger()
     out = perform_wash(lots, logger)
-    print 'output:'
+    print('output:')
     lot.print_lots(out)
     if parsed.out_file:
-      print 'Saving final lots to', parsed.out_file
+      print('Saving final lots to', parsed.out_file)
       lot.save_lots(out, parsed.out_file)
 
 if __name__ == "__main__":
